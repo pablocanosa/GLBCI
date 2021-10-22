@@ -1,10 +1,13 @@
 package com.glbci.eval.model;
 
-public class Error {
+public class ExceptionResponse {
 
     private String message;
 
-    public Error(String message) {
+    public ExceptionResponse() {
+    }
+
+    public ExceptionResponse(String message) {
         this.message = message;
     }
 

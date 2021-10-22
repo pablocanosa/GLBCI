@@ -112,4 +112,20 @@ public class UserDTO {
     public void setActive(Boolean active) {
         isActive = active;
     }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", phones=" + phones.toString() +
+                ", created=" + created +
+                ", modified=" + modified +
+                ", lastLogin=" + lastLogin +
+                ", token='" + token + '\'' +
+                ", isActive=" + isActive +
+                '}';
+    }
 }

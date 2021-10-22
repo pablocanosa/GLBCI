@@ -38,4 +38,13 @@ public class PhoneDTO {
     public void setCountrycode(String countrycode) {
         this.countrycode = countrycode;
     }
+
+    @Override
+    public String toString() {
+        return "PhoneDTO{" +
+                "number='" + number + '\'' +
+                ", citycode='" + citycode + '\'' +
+                ", countrycode='" + countrycode + '\'' +
+                '}';
+    }
 }

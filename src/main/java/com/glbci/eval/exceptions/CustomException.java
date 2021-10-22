@@ -1,17 +1,10 @@
 package com.glbci.eval.exceptions;
 
-import com.glbci.eval.model.Error;
+import com.glbci.eval.model.ExceptionResponse;
 
 public class CustomException extends RuntimeException{
 
-    private Error error;
-
-    public CustomException(Error error){
-        super(error.getMessage());
-        this.error = error;
-    }
-
-    public CustomException(){
-
+    public CustomException(String message){
+        super(message);
     }
 }
