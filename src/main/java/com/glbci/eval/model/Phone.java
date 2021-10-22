@@ -36,14 +36,6 @@ public class Phone {
         this.user = user;
     }
 
-    public Phone(Integer id, String number, String cityCode, String countryCode, User user) {
-        this.id = id;
-        this.number = number;
-        this.cityCode = cityCode;
-        this.countryCode = countryCode;
-//        this.user = user;
-    }
-
     public Integer getId() {
         return id;
     }

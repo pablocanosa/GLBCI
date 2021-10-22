@@ -87,13 +87,14 @@ public class UserService {
         if(user != null){
             return convertUserToDto(user);
         }else{
-            throw new NotFoundException("User with ID " + uid + " doesn't exists.");
+            String message = "User with ID " + uid + " doesn't exists.";
+            LOGGER.info(message);
+            throw new NotFoundException(message);
         }
     }
 
     public MessageResponse deleteUserById(String uid) {
-        User user = new User();
-        user = userRepository.findById(uid);
+        User user = userRepository.findById(uid);
         if(user != null){
             userRepository.delete(user);
         }else{
@@ -150,13 +151,13 @@ public class UserService {
         return uuid.toString();
     }
 
-    private Boolean validateEmail(String email){
+    private boolean validateEmail(String email){
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
 
-    private Boolean validatePwd(String pwd){
+    private boolean validatePwd(String pwd){
         Pattern pattern = Pattern.compile(PWD_REGEX);
         Matcher matcher = pattern.matcher(pwd);
         return matcher.matches();
@@ -168,14 +169,8 @@ public class UserService {
         return userDTO;
     }
 
-    private PhoneDTO convertPhoneToDto(Phone phone) {
-        PhoneDTO phoneDTO = modelMapper.map(phone, PhoneDTO.class);
-        return phoneDTO;
-    }
-
     private String encode(String pwd){
-        String encodedString = Base64.getEncoder().encodeToString(pwd.getBytes());
-        return encodedString;
+        return Base64.getEncoder().encodeToString(pwd.getBytes());
     }
 
     private String decode(String pwd64){

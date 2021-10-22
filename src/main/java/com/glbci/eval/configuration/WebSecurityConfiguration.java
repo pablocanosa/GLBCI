@@ -14,7 +14,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/h2-console").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/users").permitAll();
-                //.anyRequest().authenticated();
 
         //H2 console http://localhost:8081/h2-console
         http.headers().frameOptions().disable();

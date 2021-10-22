@@ -1,7 +1,5 @@
 package com.glbci.eval.model.dto;
 
-import com.glbci.eval.model.Phone;
-
 import java.util.Date;
 import java.util.List;
 

@@ -22,9 +22,9 @@ public class UserRestController {
 
     @PostMapping()
     public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userToSave) {
-        LOGGER.info("Create User: {}", userToSave.toString());
+        LOGGER.info("Create User: {}", userToSave);
         UserDTO response = userService.saveUser(userToSave);
-        LOGGER.info("User created: {}", response.toString());
+        LOGGER.info("User created: {}", response);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -32,7 +32,7 @@ public class UserRestController {
     public ResponseEntity<UserDTO> getUserById(@PathVariable String uid) {
         LOGGER.info("Get User: {}", uid);
         UserDTO response = userService.getUserById(uid);
-        LOGGER.info("User: {}", response.toString());
+        LOGGER.info("User: {}", response);
         return ResponseEntity.ok(response);
     }
 
@@ -46,10 +46,10 @@ public class UserRestController {
 
 
     @PutMapping(value = "")
-    public ResponseEntity<UserDTO> getUserById(@RequestBody UserDTO userToUpdate) throws Exception {
+    public ResponseEntity<UserDTO> getUserById(@RequestBody UserDTO userToUpdate) {
         LOGGER.info("Update User: {}", userToUpdate);
         UserDTO response = userService.updateUser(userToUpdate);
-        LOGGER.info("User updated: {}", response.toString());
+        LOGGER.info("User updated: {}", response);
         return ResponseEntity.ok(response);
     }
 }
