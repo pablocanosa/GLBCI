@@ -10,6 +10,8 @@ import com.glbci.eval.model.dto.PhoneDTO;
 import com.glbci.eval.model.dto.UserDTO;
 import com.glbci.eval.repositories.PhoneRepository;
 import com.glbci.eval.repositories.UserRepository;
+import com.glbci.eval.utils.Base64Utils;
+import com.glbci.eval.utils.JwtUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,10 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private PhoneRepository phoneRepository;
+    @Autowired
+    private Base64Utils base64Utils;
+    @Autowired
+    private JwtUtils jwtUtils;
 
     public UserDTO saveUser(UserDTO userToSave){
         User user = new User();
@@ -57,7 +63,7 @@ public class UserService {
 
         String pwd = userToSave.getPassword();
         if(validatePwd(pwd)){
-            user.setPassword(encode(pwd));
+            user.setPassword(base64Utils.encode(pwd));
         }else{
             String message = "Password doesn't follow the correct format (One upercase letter, lowercase case letters and two digits.";
             LOGGER.info(message);
@@ -68,7 +74,7 @@ public class UserService {
         user.setModified(date);
         user.setLastLogin(date);
 
-        user.setToken("temp");
+        user.setToken(jwtUtils.generateToken(email));
         user.setActive(true);
 
         List<Phone> phones = new ArrayList<>();
@@ -122,7 +128,7 @@ public class UserService {
 
             String pwd = userToUpdate.getPassword();
             if(validatePwd(pwd)){
-                user.setPassword(encode(pwd));
+                user.setPassword(base64Utils.encode(pwd));
             }else{
                 String message = "Password doesn't follow the correct format (One upercase letter, lowercase case letters and two digits.";
                 LOGGER.info(message);
@@ -165,17 +171,7 @@ public class UserService {
 
     private UserDTO convertUserToDto(User user) {
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-        userDTO.setPassword(decode(userDTO.getPassword()));
+        userDTO.setPassword(base64Utils.decode(userDTO.getPassword()));
         return userDTO;
     }
-
-    private String encode(String pwd){
-        return Base64.getEncoder().encodeToString(pwd.getBytes());
-    }
-
-    private String decode(String pwd64){
-        byte[] decodedBytes = Base64.getDecoder().decode(pwd64);
-        return new String(decodedBytes);
-    }
-
 }
