@@ -37,6 +37,6 @@ class GetUserTest extends Specification{
 
         then:
         HttpResponseException e = thrown(HttpResponseException)
-        assert e.response.status == 404
+        e.response.status == 404
     }
 }

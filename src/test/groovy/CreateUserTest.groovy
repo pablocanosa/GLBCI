@@ -41,7 +41,7 @@ class CreateUserTest extends Specification {
 
         then:
         HttpResponseException e = thrown(HttpResponseException)
-        assert e.response.status == 409
+        e.response.status == 409
     }
 
     def "Check create User with wrong email format"() {
@@ -55,7 +55,7 @@ class CreateUserTest extends Specification {
 
         then:
         HttpResponseException e = thrown(HttpResponseException)
-        assert e.response.status == 400
+        e.response.status == 400
     }
 
     def "Check create User with wrong password format"() {
@@ -69,6 +69,6 @@ class CreateUserTest extends Specification {
 
         then:
         HttpResponseException e = thrown(HttpResponseException)
-        assert e.response.status == 400
+        e.response.status == 400
     }
 }

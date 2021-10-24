@@ -46,7 +46,7 @@ class UpdateUserTest extends Specification {
 
         then:
         HttpResponseException e = thrown(HttpResponseException)
-        assert e.response.status == 400
+        e.response.status == 400
     }
 
     def "Check update User with wrong password format"() {
@@ -63,6 +63,6 @@ class UpdateUserTest extends Specification {
 
         then:
         HttpResponseException e = thrown(HttpResponseException)
-        assert e.response.status == 400
+        e.response.status == 400
     }
 }
