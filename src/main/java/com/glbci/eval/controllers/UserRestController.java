@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class UserRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRestController.class);
@@ -20,7 +20,7 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    @PostMapping()
+    @PostMapping("/users")
     public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userToSave) {
         LOGGER.info("Create User: {}", userToSave);
         UserDTO response = userService.saveUser(userToSave);
@@ -28,7 +28,7 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping(value = "/{uid}")
+    @GetMapping(value = "/users/{uid}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String uid) {
         LOGGER.info("Get User: {}", uid);
         UserDTO response = userService.getUserById(uid);
@@ -36,7 +36,7 @@ public class UserRestController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping(value = "/{uid}")
+    @DeleteMapping(value = "/users/{uid}")
     public ResponseEntity<MessageResponse> deleteUserById(@PathVariable String uid) {
         LOGGER.info("Delete User: {}", uid);
         MessageResponse response = userService.deleteUserById(uid);
@@ -45,7 +45,7 @@ public class UserRestController {
     }
 
 
-    @PutMapping(value = "")
+    @PutMapping(value = "/users")
     public ResponseEntity<UserDTO> getUserById(@RequestBody UserDTO userToUpdate) {
         LOGGER.info("Update User: {}", userToUpdate);
         UserDTO response = userService.updateUser(userToUpdate);

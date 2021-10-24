@@ -18,6 +18,13 @@ public class UserDTO {
     public UserDTO() {
     }
 
+    public UserDTO(String name, String email, String password, List<PhoneDTO> phones) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phones = phones;
+    }
+
     public UserDTO(String id, String name, String email, String password, List<PhoneDTO> phones, Date created, Date modified, Date lastLogin, String token, Boolean isActive) {
         this.id = id;
         this.name = name;
