@@ -7,11 +7,11 @@ import java.util.Base64;
 @Component
 public class Base64Utils {
 
-    public String encode(String pwd){
+    public String encode(String pwd) {
         return Base64.getEncoder().encodeToString(pwd.getBytes());
     }
 
-    public String decode(String pwd64){
+    public String decode(String pwd64) {
         byte[] decodedBytes = Base64.getDecoder().decode(pwd64);
         return new String(decodedBytes);
     }

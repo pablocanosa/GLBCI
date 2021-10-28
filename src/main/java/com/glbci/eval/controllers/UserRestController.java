@@ -2,6 +2,7 @@ package com.glbci.eval.controllers;
 
 import com.glbci.eval.model.MessageResponse;
 import com.glbci.eval.model.dto.UserDTO;
+import com.glbci.eval.model.dto.UserResponseDTO;
 import com.glbci.eval.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,17 +22,17 @@ public class UserRestController {
     private UserService userService;
 
     @PostMapping("/users")
-    public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userToSave) {
+    public ResponseEntity<UserResponseDTO> saveUser(@RequestBody UserDTO userToSave) {
         LOGGER.info("Create User: {}", userToSave);
-        UserDTO response = userService.saveUser(userToSave);
+        UserResponseDTO response = userService.saveUser(userToSave);
         LOGGER.info("User created: {}", response);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping(value = "/users/{uid}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable String uid) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String uid) {
         LOGGER.info("Get User: {}", uid);
-        UserDTO response = userService.getUserById(uid);
+        UserResponseDTO response = userService.getUserById(uid);
         LOGGER.info("User: {}", response);
         return ResponseEntity.ok(response);
     }
@@ -45,11 +46,19 @@ public class UserRestController {
     }
 
 
-    @PutMapping(value = "/users")
-    public ResponseEntity<UserDTO> getUserById(@RequestBody UserDTO userToUpdate) {
+    @PutMapping(value = "/users/{uid}")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String uid, @RequestBody UserDTO userToUpdate) {
         LOGGER.info("Update User: {}", userToUpdate);
-        UserDTO response = userService.updateUser(userToUpdate);
+        UserResponseDTO response = userService.updateUser(uid, userToUpdate);
         LOGGER.info("User updated: {}", response);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping(value = "/users/{uid}")
+    public ResponseEntity<UserResponseDTO> enableById(@PathVariable String uid) {
+        LOGGER.info("Change Active/Disable User: {}", uid);
+        UserResponseDTO response = userService.enablerById(uid);
+        LOGGER.info("Changed Active/Disable User: {}", response);
         return ResponseEntity.ok(response);
     }
 }
