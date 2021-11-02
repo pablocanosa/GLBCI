@@ -12,9 +12,6 @@ import java.time.LocalDateTime;
 public class UserResponseDTO {
 
     private String id;
-//    private LocalDateTime created;
-//    private LocalDateTime modified;
-//    private LocalDateTime lastLogin;
     private String token;
     private Boolean isActive;
 }

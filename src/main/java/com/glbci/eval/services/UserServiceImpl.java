@@ -146,11 +146,6 @@ public class UserServiceImpl implements UserService{
         return userRepository.save(user);
     }
 
-//    private void cleanPhones(User user) {
-//        List<Phone> phones = user.getPhones();
-//        phones.forEach(phone -> phoneRepository.delete(phone));
-//    }
-
     private UserResponseDTO convertUserToUserResponseDto(User user) {
         UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
         return userResponseDTO;
