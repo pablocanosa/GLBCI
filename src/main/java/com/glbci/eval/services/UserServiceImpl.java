@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService{
             return convertUserToGetResponseDto(user);
         } else {
             String message = "User with ID " + uid + " doesn't exists.";
-            LOGGER.info(message);
+            LOGGER.error(message);
             throw new NotFoundException(message);
         }
     }
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService{
             userRepository.delete(user);
         } else {
             String message = "User with ID " + uid + " doesn't exists.";
-            LOGGER.info(message);
+            LOGGER.error(message);
             throw new NotFoundException(message);
         }
         return new MessageResponseDTO("User with ID " + uid + " was deleted.", LocalDateTime.now());
@@ -72,10 +72,11 @@ public class UserServiceImpl implements UserService{
     public MessageResponseDTO updateUser(String uid, UserRequestDTO userToUpdate) {
         User user = userRepository.findById(uid);
         if (user != null) {
+            buildUser(userToUpdate, user, uid);
             return new MessageResponseDTO("User with ID " + uid + " was updated.", LocalDateTime.now());
         } else {
             String message = "User with ID " + uid + " doesn't exists.";
-            LOGGER.info(message);
+            LOGGER.error(message);
             throw new NotFoundException(message);
         }
     }
@@ -84,14 +85,12 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findById(uid);
         if (user != null) {
             user.setIsActive(!user.getIsActive());
-            LocalDateTime date = LocalDateTime.now();
-            user.setModified(date);
-            cleanPhones(user);
-            user.setPhones(user.getPhones());
+            user.setModified(LocalDateTime.now());
+            userRepository.save(user);
             return new MessageResponseDTO("User with ID " + uid + " was updated.", LocalDateTime.now());
         } else {
             String message = "User with ID " + uid + " doesn't exists.";
-            LOGGER.info(message);
+            LOGGER.error(message);
             throw new NotFoundException(message);
         }
     }
@@ -112,7 +111,7 @@ public class UserServiceImpl implements UserService{
                 user.setEmail(userToSave.getEmail());
             } else {
                 String message = email + " is already in use";
-                LOGGER.info(message);
+                LOGGER.error(message);
                 throw new AlreadyExistsException(message);
             }
         } else {
@@ -126,7 +125,7 @@ public class UserServiceImpl implements UserService{
             user.setPassword(base64Utils.encode(pwd));
         } else {
             String message = "Password doesn't follow the correct format (One upercase letter, lowercase case letters and two digits.";
-            LOGGER.info(message);
+            LOGGER.error(message);
             throw new BadRequestException(message);
         }
 
@@ -143,15 +142,14 @@ public class UserServiceImpl implements UserService{
             user.setPhones(phones);
         } else {
             user.setModified(date);
-            cleanPhones(user);
         }
         return userRepository.save(user);
     }
 
-    private void cleanPhones(User user) {
-        List<Phone> phones = user.getPhones();
-        phones.forEach(phone -> phoneRepository.delete(phone));
-    }
+//    private void cleanPhones(User user) {
+//        List<Phone> phones = user.getPhones();
+//        phones.forEach(phone -> phoneRepository.delete(phone));
+//    }
 
     private UserResponseDTO convertUserToUserResponseDto(User user) {
         UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
