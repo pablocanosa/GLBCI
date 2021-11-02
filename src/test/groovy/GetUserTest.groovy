@@ -1,5 +1,5 @@
 import com.glbci.eval.model.dto.PhoneDTO
-import com.glbci.eval.model.dto.UserDTO
+import com.glbci.eval.model.dto.UserRequestDTO
 import groovyx.net.http.HttpResponseException
 import groovyx.net.http.RESTClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -20,7 +20,7 @@ class GetUserTest extends Specification{
         PhoneDTO phoneDTO = new PhoneDTO("22223333", "11", "54")
         List<PhoneDTO> listPhoneDto = new ArrayList<>();
         listPhoneDto.add(phoneDTO)
-        UserDTO userDTO = new UserDTO("Juan Manual", "juanmanuel@gmail.com", "Juan88", listPhoneDto);
+        UserRequestDTO userDTO = new UserRequestDTO("Juan Manual", "juanmanuel@gmail.com", "Juan88", listPhoneDto);
 
         def createResponse = restClient.post([path: "/api/users", contentType: "application/json", body:userDTO])
         def uid = createResponse.data.id;

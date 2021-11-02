@@ -1,5 +1,5 @@
 import com.glbci.eval.model.dto.PhoneDTO
-import com.glbci.eval.model.dto.UserDTO
+import com.glbci.eval.model.dto.UserRequestDTO
 import groovyx.net.http.HttpResponseException
 import groovyx.net.http.RESTClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -20,7 +20,7 @@ class UpdateUserTest extends Specification {
         PhoneDTO phoneDTO = new PhoneDTO("22223333", "11", "54")
         List<PhoneDTO> listPhoneDto = new ArrayList<>();
         listPhoneDto.add(phoneDTO)
-        UserDTO userDTO = new UserDTO("Jose Update", "joseupdate@gmail.com", "Jose88", listPhoneDto);
+        UserRequestDTO userDTO = new UserRequestDTO("Jose Update", "joseupdate@gmail.com", "Jose88", listPhoneDto);
 
         def response = restClient.post([path: "/api/users", contentType: "application/json", body:userDTO])
         userDTO.setId(response.data.id)
@@ -37,7 +37,7 @@ class UpdateUserTest extends Specification {
         PhoneDTO phoneDTO = new PhoneDTO("22223333", "11", "54")
         List<PhoneDTO> listPhoneDto = new ArrayList<>();
         listPhoneDto.add(phoneDTO)
-        UserDTO userDTO = new UserDTO("Juan Update", "joseupdate1@gmail.com", "Juan88", listPhoneDto);
+        UserRequestDTO userDTO = new UserRequestDTO("Juan Update", "joseupdate1@gmail.com", "Juan88", listPhoneDto);
 
         def response = restClient.post([path: "/api/users", contentType: "application/json", body:userDTO])
         userDTO.setId(response.data.id)
@@ -54,7 +54,7 @@ class UpdateUserTest extends Specification {
         PhoneDTO phoneDTO = new PhoneDTO("22223333", "11", "54")
         List<PhoneDTO> listPhoneDto = new ArrayList<>();
         listPhoneDto.add(phoneDTO)
-        UserDTO userDTO = new UserDTO("Juan Update", "joseupdate2@gmail.com", "Juan88", listPhoneDto);
+        UserRequestDTO userDTO = new UserRequestDTO("Juan Update", "joseupdate2@gmail.com", "Juan88", listPhoneDto);
 
         def response = restClient.post([path: "/api/users", contentType: "application/json", body:userDTO])
         userDTO.setId(response.data.id)

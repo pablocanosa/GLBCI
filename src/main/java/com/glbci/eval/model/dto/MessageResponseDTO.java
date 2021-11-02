@@ -1,4 +1,4 @@
-package com.glbci.eval.model;
+package com.glbci.eval.model.dto;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageResponse {
+public class MessageResponseDTO {
 
     private String message;
     private LocalDateTime date;

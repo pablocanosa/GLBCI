@@ -1,6 +1,5 @@
-import com.glbci.eval.exceptions.AlreadyExistsException
 import com.glbci.eval.model.dto.PhoneDTO
-import com.glbci.eval.model.dto.UserDTO
+import com.glbci.eval.model.dto.UserRequestDTO
 import groovyx.net.http.HttpResponseException
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
@@ -21,7 +20,7 @@ class CreateUserTest extends Specification {
         PhoneDTO phoneDTO = new PhoneDTO("22223333", "11", "54")
         List<PhoneDTO> listPhoneDto = new ArrayList<>();
         listPhoneDto.add(phoneDTO)
-        UserDTO userDTO = new UserDTO("Juan Carlos", "juancarlos@gmail.com", "Juan88", listPhoneDto);
+        UserRequestDTO userDTO = new UserRequestDTO("Juan Carlos", "juancarlos@gmail.com", "Juan88", listPhoneDto);
 
         def response = restClient.post([path: "/api/users", contentType: "application/json", body:userDTO])
 
@@ -34,7 +33,7 @@ class CreateUserTest extends Specification {
         PhoneDTO phoneDTO = new PhoneDTO("22223333", "11", "54")
         List<PhoneDTO> listPhoneDto = new ArrayList<>();
         listPhoneDto.add(phoneDTO)
-        UserDTO userDTO = new UserDTO("Juan Pablo", "juanpablo@gmail.com", "Juan88", listPhoneDto);
+        UserRequestDTO userDTO = new UserRequestDTO("Juan Pablo", "juanpablo@gmail.com", "Juan88", listPhoneDto);
 
         def response = restClient.post([path: "/api/users", contentType: "application/json", body:userDTO])
         response = restClient.post([path: "/api/users", contentType: "application/json", body:userDTO])
@@ -49,7 +48,7 @@ class CreateUserTest extends Specification {
         PhoneDTO phoneDTO = new PhoneDTO("22223333", "11", "54")
         List<PhoneDTO> listPhoneDto = new ArrayList<>();
         listPhoneDto.add(phoneDTO)
-        UserDTO userDTO = new UserDTO("Juan Carlos", "juancarlosgmail.com", "Juan88", listPhoneDto);
+        UserRequestDTO userDTO = new UserRequestDTO("Juan Carlos", "juancarlosgmail.com", "Juan88", listPhoneDto);
 
         def response = restClient.post([path: "/api/users", contentType: "application/json", body:userDTO])
 
@@ -63,7 +62,7 @@ class CreateUserTest extends Specification {
         PhoneDTO phoneDTO = new PhoneDTO("22223333", "11", "54")
         List<PhoneDTO> listPhoneDto = new ArrayList<>();
         listPhoneDto.add(phoneDTO)
-        UserDTO userDTO = new UserDTO("Juan Carlos", "juancarlos1@gmail.com", "hola1", listPhoneDto);
+        UserRequestDTO userDTO = new UserRequestDTO("Juan Carlos", "juancarlos1@gmail.com", "hola1", listPhoneDto);
 
         def response = restClient.post([path: "/api/users", contentType: "application/json", body:userDTO])
 

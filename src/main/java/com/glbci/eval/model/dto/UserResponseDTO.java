@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UserResponseDTO extends UserDTO {
+public class UserResponseDTO {
 
     private String id;
-    private LocalDateTime created;
-    private LocalDateTime modified;
-    private LocalDateTime lastLogin;
+//    private LocalDateTime created;
+//    private LocalDateTime modified;
+//    private LocalDateTime lastLogin;
     private String token;
     private Boolean isActive;
 }
