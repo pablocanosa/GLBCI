@@ -20,7 +20,7 @@ import java.util.List;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class UpdateUserServiceTest {
+public class UpdateUserServiceImplTest {
 
     @Autowired
     private UserService userService;
