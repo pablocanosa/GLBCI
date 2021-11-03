@@ -1,9 +1,9 @@
 package com.glbci.eval.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.glbci.eval.exceptions.AlreadyExistsException;
 import com.glbci.eval.exceptions.BadRequestException;
+import com.glbci.eval.exceptions.NotFoundException;
+import com.glbci.eval.model.dto.MessageResponseDTO;
 import com.glbci.eval.model.dto.PhoneDTO;
 import com.glbci.eval.model.dto.UserRequestDTO;
 import com.glbci.eval.model.dto.UserResponseDTO;
@@ -19,11 +19,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class SaveUserControllerTest {
+public class UpdateUserControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -39,36 +40,37 @@ public class SaveUserControllerTest {
     @MockBean
     UserService userService;
 
-    @Test
-    void saveUserOK_statusCode201() throws Exception {
-        UserRequestDTO userRequestDTO = createUserRequestDTO();
-        UserResponseDTO userResponseDTO = new UserResponseDTO("id1234", "token1234567890", true);
+    private static final String UID = "id1234";
 
-        when(userService.saveUser(any())).thenReturn(userResponseDTO);
+    @Test
+    void updateUserOK_statusCode200() throws Exception {
+        UserRequestDTO userRequestDTO = createUserRequestDTO();
+        MessageResponseDTO messageResponseDTO = new MessageResponseDTO("User with ID " + UID + " was updated.", LocalDateTime.now());
+
+        when(userService.updateUser(anyString(), any())).thenReturn(messageResponseDTO);
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/users")
+                .put("/api/users/" + UID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(userRequestDTO));
 
         mockMvc.perform(request)
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is("id1234")))
-                .andExpect(jsonPath("$.token", is("token1234567890")))
-                .andExpect(jsonPath("$.isActive", is(true)))
+                .andExpect(jsonPath("$.message", is("User with ID " + UID + " was updated.")))
+                .andExpect(jsonPath("$.date", notNullValue()))
                 .andReturn();
 
-        verify(userService, times(1)).saveUser(any());
+        verify(userService, times(1)).updateUser(anyString(), any());
     }
 
     @Test
-    void saveUserWrongEmailFormat_statusCode400() throws Exception {
+    void updateUserWrongEmailFormat_statusCode400() throws Exception {
         UserRequestDTO userRequestDTO = createUserRequestDTO();
 
-        when(userService.saveUser(any())).thenThrow(new BadRequestException("is not a valid Email format"));
+        when(userService.updateUser(anyString(), any())).thenThrow(new BadRequestException("is not a valid Email format"));
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/users")
+                .put("/api/users/" + UID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(userRequestDTO));
 
@@ -78,46 +80,47 @@ public class SaveUserControllerTest {
                 .andExpect(jsonPath("$.message", containsString("is not a valid Email format")))
                 .andReturn();
 
-        verify(userService, times(1)).saveUser(any());
+        verify(userService, times(1)).updateUser(anyString(), any());
     }
 
     @Test
-    void saveUserEmailAlreadyInUse_statusCode409() throws Exception {
+    void updateUserWrongPasswordFormat_statusCode400() throws Exception {
         UserRequestDTO userRequestDTO = createUserRequestDTO();
 
-        when(userService.saveUser(any())).thenThrow(new AlreadyExistsException("is already in use"));
+        when(userService.updateUser(anyString(), any())).thenThrow(new BadRequestException("Password doesn't follow the correct format (One upercase letter, lowercase case letters and two digits."));
         RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(userRequestDTO));
-
-        mockMvc.perform(request)
-                .andExpect(status().isConflict())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message", containsString("is already in use")))
-                .andReturn();
-
-        verify(userService, times(1)).saveUser(any());
-    }
-
-    @Test
-    void saveUserWrongPasswordFormat_statusCode400() throws Exception {
-        UserRequestDTO userRequestDTO = createUserRequestDTO();
-
-        when(userService.saveUser(any())).thenThrow(new BadRequestException("Password doesn't follow the correct format"));
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/api/users")
+                .put("/api/users/" + UID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(userRequestDTO));
 
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message", containsString("Password doesn't follow the correct format")))
+                .andExpect(jsonPath("$.message", containsString("Password doesn't follow the correct format (One upercase letter, lowercase case letters and two digits.")))
                 .andReturn();
 
-        verify(userService, times(1)).saveUser(any());
+        verify(userService, times(1)).updateUser(anyString(), any());
     }
+
+    @Test
+    void updateUserNotFound_statusCode404() throws Exception {
+        UserRequestDTO userRequestDTO = createUserRequestDTO();
+
+        when(userService.updateUser(anyString(), any())).thenThrow(new NotFoundException("doesn't exists."));
+        RequestBuilder request = MockMvcRequestBuilders
+                .put("/api/users/" + UID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userRequestDTO));
+
+        mockMvc.perform(request)
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message", containsString("doesn't exists.")))
+                .andReturn();
+
+        verify(userService, times(1)).updateUser(anyString(), any());
+    }
+
 
     private UserRequestDTO createUserRequestDTO() {
         List<PhoneDTO> phoneDTOList = new ArrayList<>();

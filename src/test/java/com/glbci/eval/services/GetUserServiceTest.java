@@ -26,21 +26,21 @@ public class GetUserServiceTest {
     private UserResponseDTO userResponseDTO;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         List<PhoneDTO> phoneDTOList = new ArrayList<>();
         phoneDTOList.add(new PhoneDTO("22223333", "11", "54"));
         userResponseDTO = userService.saveUser(new UserRequestDTO("Jorge Test", "jorgetest@gmail.com", "Pass99", phoneDTOList));
     }
 
     @Test
-    void getUserOK(){
+    void getUserOK() {
         GetUserResponseDTO getUserResponseDTO = userService.getUserById(userResponseDTO.getId());
         Assertions.assertNotNull(getUserResponseDTO);
         Assertions.assertEquals(userResponseDTO.getToken(), getUserResponseDTO.getToken());
     }
 
     @Test
-    void getUserNotFound(){
+    void getUserNotFound() {
         NotFoundException exception = Assertions.assertThrows(NotFoundException.class, () -> {
             userService.getUserById("wrong-id");
         });

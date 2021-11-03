@@ -29,7 +29,7 @@ public class UpdateUserServiceTest {
     private UserResponseDTO userResponseDTO;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         List<PhoneDTO> phoneDTOList = new ArrayList<>();
         phoneDTOList.add(new PhoneDTO("22223333", "11", "54"));
         userRequestDTO = new UserRequestDTO("Jorge Test", "jorgetest@gmail.com", "Pass99", phoneDTOList);
@@ -37,7 +37,7 @@ public class UpdateUserServiceTest {
     }
 
     @Test
-    void updateUserOK(){
+    void updateUserOK() {
         userRequestDTO.setName("Jorge Test2");
         MessageResponseDTO messageResponseDTO = userService.updateUser(userResponseDTO.getId(), userRequestDTO);
         String expectedMessage = "was updated.";
@@ -46,7 +46,7 @@ public class UpdateUserServiceTest {
     }
 
     @Test
-    void updateUserNotFound(){
+    void updateUserNotFound() {
         NotFoundException exception = Assertions.assertThrows(NotFoundException.class, () -> {
             userService.updateUser("wrong-id", userRequestDTO);
         });
@@ -55,7 +55,7 @@ public class UpdateUserServiceTest {
     }
 
     @Test
-    void saveUserWrongEmailFormat(){
+    void updateUserWrongEmailFormat() {
         userRequestDTO.setEmail("jorgetestgmail.com");
         BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
             userService.updateUser(userResponseDTO.getId(), userRequestDTO);
@@ -65,7 +65,7 @@ public class UpdateUserServiceTest {
     }
 
     @Test
-    void saveUserWrongPasswordFormat(){
+    void updateUserWrongPasswordFormat() {
         userRequestDTO.setPassword("pwd78");
         BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
             userService.updateUser(userResponseDTO.getId(), userRequestDTO);

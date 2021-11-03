@@ -27,20 +27,20 @@ public class SaveUserServiceTest {
     private UserRequestDTO userRequestDTO;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         List<PhoneDTO> phoneDTOList = new ArrayList<>();
         phoneDTOList.add(new PhoneDTO("22223333", "11", "54"));
         userRequestDTO = new UserRequestDTO("Jorge Test", "jorgetest@gmail.com", "Pass99", phoneDTOList);
     }
 
     @Test
-    void saveUserOK(){
+    void saveUserOK() {
         UserResponseDTO userResponseDTO = userService.saveUser(userRequestDTO);
         Assertions.assertNotNull(userResponseDTO);
     }
 
     @Test
-    void saveUserWrongEmailFormat(){
+    void saveUserWrongEmailFormat() {
         userRequestDTO.setEmail("jorgetestgmail.com");
         BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
             userService.saveUser(userRequestDTO);
@@ -50,7 +50,7 @@ public class SaveUserServiceTest {
     }
 
     @Test
-    void saveUserEmailAlreadyInUse(){
+    void saveUserEmailAlreadyInUse() {
         UserResponseDTO userResponseDTO = userService.saveUser(userRequestDTO);
         AlreadyExistsException exception = Assertions.assertThrows(AlreadyExistsException.class, () -> {
             userService.saveUser(userRequestDTO);
@@ -60,7 +60,7 @@ public class SaveUserServiceTest {
     }
 
     @Test
-    void saveUserWrongPasswordFormat(){
+    void saveUserWrongPasswordFormat() {
         userRequestDTO.setPassword("pwd78");
         BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
             userService.saveUser(userRequestDTO);

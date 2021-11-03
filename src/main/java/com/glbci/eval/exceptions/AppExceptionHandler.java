@@ -31,13 +31,6 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ExceptionResponse> badRequestEx(CustomException e) {
-        ExceptionResponse response = new ExceptionResponse();
-        response.setMessage(e.getMessage());
-        return new ResponseEntity<ExceptionResponse>(response, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> serverErrorEx(Exception e) {
         ExceptionResponse response = new ExceptionResponse();

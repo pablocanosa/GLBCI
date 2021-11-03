@@ -26,14 +26,14 @@ public class DeleteUserServiceTest {
     private UserResponseDTO userResponseDTO;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         List<PhoneDTO> phoneDTOList = new ArrayList<>();
         phoneDTOList.add(new PhoneDTO("22223333", "11", "54"));
         userResponseDTO = userService.saveUser(new UserRequestDTO("Jorge Test", "jorgetest@gmail.com", "Pass99", phoneDTOList));
     }
 
     @Test
-    void getUserOK(){
+    void deleteUserOK() {
         MessageResponseDTO messageResponseDTO = userService.deleteUserById(userResponseDTO.getId());
         Assertions.assertNotNull(messageResponseDTO);
         String expectedMessage = "doesn't exists.";
@@ -41,7 +41,7 @@ public class DeleteUserServiceTest {
     }
 
     @Test
-    void getUserNotFound(){
+    void deleteUserNotFound() {
         NotFoundException exception = Assertions.assertThrows(NotFoundException.class, () -> {
             userService.deleteUserById("wrong-id");
         });

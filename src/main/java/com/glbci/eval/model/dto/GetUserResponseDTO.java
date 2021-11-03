@@ -1,6 +1,7 @@
 package com.glbci.eval.model.dto;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,7 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GetUserResponseDTO extends UserResponseDTO{
+@SuperBuilder
+public class GetUserResponseDTO extends UserResponseDTO {
     private String name;
     private String email;
     private String password;

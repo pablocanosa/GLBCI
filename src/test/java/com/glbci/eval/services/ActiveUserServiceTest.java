@@ -23,14 +23,14 @@ public class ActiveUserServiceTest {
     private UserResponseDTO userResponseDTO;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         List<PhoneDTO> phoneDTOList = new ArrayList<>();
         phoneDTOList.add(new PhoneDTO("22223333", "11", "54"));
         userResponseDTO = userService.saveUser(new UserRequestDTO("Jorge Test", "jorgetest@gmail.com", "Pass99", phoneDTOList));
     }
 
     @Test
-    void activateUserOK(){
+    void activateUserOK() {
         MessageResponseDTO messageResponseDTO = userService.enablerById(userResponseDTO.getId());
         String expectedMessage = "was updated.";
         Assertions.assertNotNull(messageResponseDTO);
@@ -38,7 +38,7 @@ public class ActiveUserServiceTest {
     }
 
     @Test
-    void activateUserNotFound(){
+    void activateUserNotFound() {
         NotFoundException exception = Assertions.assertThrows(NotFoundException.class, () -> {
             userService.enablerById("wrong-id");
         });
