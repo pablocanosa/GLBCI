@@ -36,7 +36,6 @@ public class GetUserServiceImpl implements GetUserService{
 
     private GetUserResponseDTO convertUserToGetResponseDto(User user) {
         GetUserResponseDTO getUserResponseDTO = modelMapper.map(user, GetUserResponseDTO.class);
-        getUserResponseDTO.setPassword(base64Utils.decode(getUserResponseDTO.getPassword()));
         return getUserResponseDTO;
     }
 

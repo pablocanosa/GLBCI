@@ -3,7 +3,7 @@ package com.glbci.eval.controllers;
 import com.glbci.eval.exceptions.NotFoundException;
 import com.glbci.eval.model.dto.GetUserResponseDTO;
 import com.glbci.eval.model.dto.PhoneDTO;
-import com.glbci.eval.services.UserService;
+import com.glbci.eval.services.GetUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,7 +33,7 @@ public class GetUserControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    UserService userService;
+    GetUserService getUserService;
 
     private static final String UID = "id1234";
 
@@ -48,14 +48,13 @@ public class GetUserControllerTest {
                 .isActive(true)
                 .name("Jorge Test")
                 .email("jorge@gmail.com")
-                .password("Pwd22")
                 .phones(phoneDTOList)
                 .created(date)
                 .lastLogin(date)
                 .modified(date)
                 .build();
 
-        when(userService.getUserById(anyString())).thenReturn(getUserResponseDTO);
+        when(getUserService.getUserById(anyString())).thenReturn(getUserResponseDTO);
 
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/api/users/" + UID);
@@ -68,19 +67,18 @@ public class GetUserControllerTest {
                 .andExpect(jsonPath("$.isActive", is(true)))
                 .andExpect(jsonPath("$.name", is("Jorge Test")))
                 .andExpect(jsonPath("$.email", is("jorge@gmail.com")))
-                .andExpect(jsonPath("$.password", is("Pwd22")))
                 .andExpect(jsonPath("$.phones", notNullValue()))
                 .andExpect(jsonPath("$.created", notNullValue()))
                 .andExpect(jsonPath("$.lastLogin", notNullValue()))
                 .andExpect(jsonPath("$.modified", notNullValue()))
                 .andReturn();
 
-        verify(userService, times(1)).getUserById(anyString());
+        verify(getUserService, times(1)).getUserById(anyString());
     }
 
     @Test
     void getUserNotFound_statusCode404() throws Exception {
-        when(userService.getUserById(anyString())).thenThrow(new NotFoundException("User with ID " + UID + " doesn't exists."));
+        when(getUserService.getUserById(anyString())).thenThrow(new NotFoundException("User with ID " + UID + " doesn't exists."));
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/api/users/" + UID);
 
@@ -90,6 +88,6 @@ public class GetUserControllerTest {
                 .andExpect(jsonPath("$.message", containsString("doesn't exists.")))
                 .andReturn();
 
-        verify(userService, times(1)).getUserById(anyString());
+        verify(getUserService, times(1)).getUserById(anyString());
     }
 }

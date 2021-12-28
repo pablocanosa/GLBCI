@@ -23,7 +23,10 @@ import java.util.List;
 public class UpdateUserServiceImplTest {
 
     @Autowired
-    private UserService userService;
+    private CreateUserService createUserService;
+
+    @Autowired
+    private UpdateUserService updateUserService;
 
     private UserRequestDTO userRequestDTO;
     private UserResponseDTO userResponseDTO;
@@ -33,13 +36,13 @@ public class UpdateUserServiceImplTest {
         List<PhoneDTO> phoneDTOList = new ArrayList<>();
         phoneDTOList.add(new PhoneDTO("22223333", "11", "54"));
         userRequestDTO = new UserRequestDTO("Jorge Test", "jorgetest@gmail.com", "Pass99", phoneDTOList);
-        userResponseDTO = userService.saveUser(userRequestDTO);
+        userResponseDTO = createUserService.saveUser(userRequestDTO);
     }
 
     @Test
     void updateUserOK() {
         userRequestDTO.setName("Jorge Test2");
-        MessageResponseDTO messageResponseDTO = userService.updateUser(userResponseDTO.getId(), userRequestDTO);
+        MessageResponseDTO messageResponseDTO = updateUserService.updateUser(userResponseDTO.getId(), userRequestDTO);
         String expectedMessage = "was updated.";
         Assertions.assertNotNull(userResponseDTO);
         Assertions.assertTrue(messageResponseDTO.getMessage().contains(expectedMessage));
@@ -48,7 +51,7 @@ public class UpdateUserServiceImplTest {
     @Test
     void updateUserNotFound() {
         NotFoundException exception = Assertions.assertThrows(NotFoundException.class, () -> {
-            userService.updateUser("wrong-id", userRequestDTO);
+            updateUserService.updateUser("wrong-id", userRequestDTO);
         });
         String expectedMessage = "doesn't exists.";
         Assertions.assertTrue(exception.getMessage().contains(expectedMessage));
@@ -58,7 +61,7 @@ public class UpdateUserServiceImplTest {
     void updateUserWrongEmailFormat() {
         userRequestDTO.setEmail("jorgetestgmail.com");
         BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
-            userService.updateUser(userResponseDTO.getId(), userRequestDTO);
+            updateUserService.updateUser(userResponseDTO.getId(), userRequestDTO);
         });
         String expectedMessage = "is not a valid Email format";
         Assertions.assertTrue(exception.getMessage().contains(expectedMessage));
@@ -68,7 +71,7 @@ public class UpdateUserServiceImplTest {
     void updateUserWrongPasswordFormat() {
         userRequestDTO.setPassword("pwd78");
         BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
-            userService.updateUser(userResponseDTO.getId(), userRequestDTO);
+            updateUserService.updateUser(userResponseDTO.getId(), userRequestDTO);
         });
         String expectedMessage = "Password doesn't follow the correct format (One upercase letter, lowercase case letters and two digits.";
         Assertions.assertTrue(exception.getMessage().contains(expectedMessage));

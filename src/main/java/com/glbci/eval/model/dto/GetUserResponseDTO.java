@@ -15,7 +15,6 @@ import java.util.List;
 public class GetUserResponseDTO extends UserResponseDTO {
     private String name;
     private String email;
-    private String password;
     private List<PhoneDTO> phones;
     private LocalDateTime created;
     private LocalDateTime modified;

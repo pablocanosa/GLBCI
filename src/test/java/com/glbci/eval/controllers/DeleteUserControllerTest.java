@@ -2,7 +2,7 @@ package com.glbci.eval.controllers;
 
 import com.glbci.eval.exceptions.NotFoundException;
 import com.glbci.eval.model.dto.MessageResponseDTO;
-import com.glbci.eval.services.UserService;
+import com.glbci.eval.services.DeleteUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,14 +30,14 @@ public class DeleteUserControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    UserService userService;
+    DeleteUserService deleteUserService;
 
     private static final String UID = "id1234";
 
     @Test
     void deleteUserOK_statusCode200() throws Exception {
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("User with ID " + UID + " was deleted.", LocalDateTime.now());
-        when(userService.deleteUserById(anyString())).thenReturn(messageResponseDTO);
+        when(deleteUserService.deleteUserById(anyString())).thenReturn(messageResponseDTO);
 
         RequestBuilder request = MockMvcRequestBuilders
                 .delete("/api/users/" + UID);
@@ -49,12 +49,12 @@ public class DeleteUserControllerTest {
                 .andExpect(jsonPath("$.date", notNullValue()))
                 .andReturn();
 
-        verify(userService, times(1)).deleteUserById(anyString());
+        verify(deleteUserService, times(1)).deleteUserById(anyString());
     }
 
     @Test
     void deleteUserNotFound_statusCode404() throws Exception {
-        when(userService.deleteUserById(anyString())).thenThrow(new NotFoundException("User with ID " + UID + " doesn't exists."));
+        when(deleteUserService.deleteUserById(anyString())).thenThrow(new NotFoundException("User with ID " + UID + " doesn't exists."));
         RequestBuilder request = MockMvcRequestBuilders
                 .delete("/api/users/" + UID);
 
@@ -64,6 +64,6 @@ public class DeleteUserControllerTest {
                 .andExpect(jsonPath("$.message", containsString("doesn't exists.")))
                 .andReturn();
 
-        verify(userService, times(1)).deleteUserById(anyString());
+        verify(deleteUserService, times(1)).deleteUserById(anyString());
     }
 }

@@ -6,8 +6,7 @@ import com.glbci.eval.exceptions.NotFoundException;
 import com.glbci.eval.model.dto.MessageResponseDTO;
 import com.glbci.eval.model.dto.PhoneDTO;
 import com.glbci.eval.model.dto.UserRequestDTO;
-import com.glbci.eval.model.dto.UserResponseDTO;
-import com.glbci.eval.services.UserService;
+import com.glbci.eval.services.UpdateUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -38,7 +37,7 @@ public class UpdateUserControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    UserService userService;
+    UpdateUserService updateUserService;
 
     private static final String UID = "id1234";
 
@@ -47,7 +46,7 @@ public class UpdateUserControllerTest {
         UserRequestDTO userRequestDTO = createUserRequestDTO();
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("User with ID " + UID + " was updated.", LocalDateTime.now());
 
-        when(userService.updateUser(anyString(), any())).thenReturn(messageResponseDTO);
+        when(updateUserService.updateUser(anyString(), any())).thenReturn(messageResponseDTO);
 
         RequestBuilder request = MockMvcRequestBuilders
                 .put("/api/users/" + UID)
@@ -61,14 +60,14 @@ public class UpdateUserControllerTest {
                 .andExpect(jsonPath("$.date", notNullValue()))
                 .andReturn();
 
-        verify(userService, times(1)).updateUser(anyString(), any());
+        verify(updateUserService, times(1)).updateUser(anyString(), any());
     }
 
     @Test
     void updateUserWrongEmailFormat_statusCode400() throws Exception {
         UserRequestDTO userRequestDTO = createUserRequestDTO();
 
-        when(userService.updateUser(anyString(), any())).thenThrow(new BadRequestException("is not a valid Email format"));
+        when(updateUserService.updateUser(anyString(), any())).thenThrow(new BadRequestException("is not a valid Email format"));
         RequestBuilder request = MockMvcRequestBuilders
                 .put("/api/users/" + UID)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -80,14 +79,14 @@ public class UpdateUserControllerTest {
                 .andExpect(jsonPath("$.message", containsString("is not a valid Email format")))
                 .andReturn();
 
-        verify(userService, times(1)).updateUser(anyString(), any());
+        verify(updateUserService, times(1)).updateUser(anyString(), any());
     }
 
     @Test
     void updateUserWrongPasswordFormat_statusCode400() throws Exception {
         UserRequestDTO userRequestDTO = createUserRequestDTO();
 
-        when(userService.updateUser(anyString(), any())).thenThrow(new BadRequestException("Password doesn't follow the correct format (One upercase letter, lowercase case letters and two digits."));
+        when(updateUserService.updateUser(anyString(), any())).thenThrow(new BadRequestException("Password doesn't follow the correct format (One upercase letter, lowercase case letters and two digits."));
         RequestBuilder request = MockMvcRequestBuilders
                 .put("/api/users/" + UID)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -99,14 +98,14 @@ public class UpdateUserControllerTest {
                 .andExpect(jsonPath("$.message", containsString("Password doesn't follow the correct format (One upercase letter, lowercase case letters and two digits.")))
                 .andReturn();
 
-        verify(userService, times(1)).updateUser(anyString(), any());
+        verify(updateUserService, times(1)).updateUser(anyString(), any());
     }
 
     @Test
     void updateUserNotFound_statusCode404() throws Exception {
         UserRequestDTO userRequestDTO = createUserRequestDTO();
 
-        when(userService.updateUser(anyString(), any())).thenThrow(new NotFoundException("doesn't exists."));
+        when(updateUserService.updateUser(anyString(), any())).thenThrow(new NotFoundException("doesn't exists."));
         RequestBuilder request = MockMvcRequestBuilders
                 .put("/api/users/" + UID)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -118,7 +117,7 @@ public class UpdateUserControllerTest {
                 .andExpect(jsonPath("$.message", containsString("doesn't exists.")))
                 .andReturn();
 
-        verify(userService, times(1)).updateUser(anyString(), any());
+        verify(updateUserService, times(1)).updateUser(anyString(), any());
     }
 
 

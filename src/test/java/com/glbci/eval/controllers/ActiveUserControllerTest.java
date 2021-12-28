@@ -2,7 +2,7 @@ package com.glbci.eval.controllers;
 
 import com.glbci.eval.exceptions.NotFoundException;
 import com.glbci.eval.model.dto.MessageResponseDTO;
-import com.glbci.eval.services.UserService;
+import com.glbci.eval.services.ActivateUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,14 +30,14 @@ public class ActiveUserControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    UserService userService;
+    ActivateUserService activateUserService;
 
     private static final String UID = "id1234";
 
     @Test
     void activateUserOK_statusCode200() throws Exception {
         MessageResponseDTO messageResponseDTO = new MessageResponseDTO("User with ID " + UID + " was updated.", LocalDateTime.now());
-        when(userService.enablerById(anyString())).thenReturn(messageResponseDTO);
+        when(activateUserService.enablerById(anyString())).thenReturn(messageResponseDTO);
 
         RequestBuilder request = MockMvcRequestBuilders
                 .patch("/api/users/" + UID);
@@ -49,12 +49,12 @@ public class ActiveUserControllerTest {
                 .andExpect(jsonPath("$.date", notNullValue()))
                 .andReturn();
 
-        verify(userService, times(1)).enablerById(anyString());
+        verify(activateUserService, times(1)).enablerById(anyString());
     }
 
     @Test
     void activateUserNotFound_statusCode404() throws Exception {
-        when(userService.enablerById(anyString())).thenThrow(new NotFoundException("User with ID " + UID + " doesn't exists."));
+        when(activateUserService.enablerById(anyString())).thenThrow(new NotFoundException("User with ID " + UID + " doesn't exists."));
         RequestBuilder request = MockMvcRequestBuilders
                 .patch("/api/users/" + UID);
 
@@ -64,6 +64,6 @@ public class ActiveUserControllerTest {
                 .andExpect(jsonPath("$.message", containsString("doesn't exists.")))
                 .andReturn();
 
-        verify(userService, times(1)).enablerById(anyString());
+        verify(activateUserService, times(1)).enablerById(anyString());
     }
 }

@@ -7,7 +7,7 @@ import com.glbci.eval.model.dto.MessageResponseDTO;
 import com.glbci.eval.model.dto.GetUserResponseDTO;
 import com.glbci.eval.model.dto.UserRequestDTO;
 import com.glbci.eval.model.dto.UserResponseDTO;
-import com.glbci.eval.services.UserService;
+import com.glbci.eval.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,19 @@ public class UserRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRestController.class);
 
     @Autowired
-    private UserService userService;
+    private ActivateUserService activateUserService;
+
+    @Autowired
+    private CreateUserService createUserService;
+
+    @Autowired
+    private DeleteUserService deleteUserService;
+
+    @Autowired
+    private GetUserService getUserService;
+
+    @Autowired
+    private UpdateUserService updateUserService;
 
     /**
      * Create a new User
@@ -35,7 +47,7 @@ public class UserRestController {
     @PostMapping("/users")
     public ResponseEntity<UserResponseDTO> saveUser(@RequestBody UserRequestDTO userToSave) {
         LOGGER.info("Create User: {}", userToSave);
-        UserResponseDTO response = userService.saveUser(userToSave);
+        UserResponseDTO response = createUserService.saveUser(userToSave);
         LOGGER.info("User created: {}", response);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -49,7 +61,7 @@ public class UserRestController {
     @GetMapping(value = "/users/{uid}")
     public ResponseEntity<GetUserResponseDTO> getUserById(@PathVariable String uid) {
         LOGGER.info("Get User: {}", uid);
-        GetUserResponseDTO response = userService.getUserById(uid);
+        GetUserResponseDTO response = getUserService.getUserById(uid);
         LOGGER.info("User: {}", response);
         return ResponseEntity.ok(response);
     }
@@ -63,7 +75,7 @@ public class UserRestController {
     @DeleteMapping(value = "/users/{uid}")
     public ResponseEntity<MessageResponseDTO> deleteUserById(@PathVariable String uid) {
         LOGGER.info("Delete User: {}", uid);
-        MessageResponseDTO response = userService.deleteUserById(uid);
+        MessageResponseDTO response = deleteUserService.deleteUserById(uid);
         LOGGER.info(response.getMessage());
         return ResponseEntity.ok(response);
     }
@@ -79,7 +91,7 @@ public class UserRestController {
     @PutMapping(value = "/users/{uid}")
     public ResponseEntity<MessageResponseDTO> updateUserById(@PathVariable String uid, @RequestBody UserRequestDTO userToUpdate) {
         LOGGER.info("Update User: {}", userToUpdate);
-        MessageResponseDTO response = userService.updateUser(uid, userToUpdate);
+        MessageResponseDTO response = updateUserService.updateUser(uid, userToUpdate);
         LOGGER.info("User updated: {}", response);
         return ResponseEntity.ok(response);
     }
@@ -93,7 +105,7 @@ public class UserRestController {
     @PatchMapping(value = "/users/{uid}")
     public ResponseEntity<MessageResponseDTO> enableById(@PathVariable String uid) {
         LOGGER.info("Change Active/Disable User: {}", uid);
-        MessageResponseDTO response = userService.enablerById(uid);
+        MessageResponseDTO response = activateUserService.enablerById(uid);
         LOGGER.info("Changed Active/Disable User: {}", response);
         return ResponseEntity.ok(response);
     }

@@ -21,7 +21,10 @@ import java.util.List;
 @Transactional
 public class GetUserServiceTest {
     @Autowired
-    private UserService userService;
+    private CreateUserService createUserService;
+
+    @Autowired
+    private GetUserService getUserService;
 
     private UserResponseDTO userResponseDTO;
 
@@ -29,12 +32,12 @@ public class GetUserServiceTest {
     public void init() {
         List<PhoneDTO> phoneDTOList = new ArrayList<>();
         phoneDTOList.add(new PhoneDTO("22223333", "11", "54"));
-        userResponseDTO = userService.saveUser(new UserRequestDTO("Jorge Test", "jorgetest@gmail.com", "Pass99", phoneDTOList));
+        userResponseDTO = createUserService.saveUser(new UserRequestDTO("Jorge Test", "jorgetest@gmail.com", "Pass99", phoneDTOList));
     }
 
     @Test
     void getUserOK() {
-        GetUserResponseDTO getUserResponseDTO = userService.getUserById(userResponseDTO.getId());
+        GetUserResponseDTO getUserResponseDTO = getUserService.getUserById(userResponseDTO.getId());
         Assertions.assertNotNull(getUserResponseDTO);
         Assertions.assertEquals(userResponseDTO.getToken(), getUserResponseDTO.getToken());
     }
@@ -42,7 +45,7 @@ public class GetUserServiceTest {
     @Test
     void getUserNotFound() {
         NotFoundException exception = Assertions.assertThrows(NotFoundException.class, () -> {
-            userService.getUserById("wrong-id");
+            getUserService.getUserById("wrong-id");
         });
         String expectedMessage = "doesn't exists.";
         Assertions.assertTrue(exception.getMessage().contains(expectedMessage));

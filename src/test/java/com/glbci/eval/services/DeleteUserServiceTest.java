@@ -21,7 +21,10 @@ import java.util.List;
 @Transactional
 public class DeleteUserServiceTest {
     @Autowired
-    private UserService userService;
+    private CreateUserService createUserService;
+
+    @Autowired
+    private DeleteUserService deleteUserService;
 
     private UserResponseDTO userResponseDTO;
 
@@ -29,12 +32,12 @@ public class DeleteUserServiceTest {
     public void init() {
         List<PhoneDTO> phoneDTOList = new ArrayList<>();
         phoneDTOList.add(new PhoneDTO("22223333", "11", "54"));
-        userResponseDTO = userService.saveUser(new UserRequestDTO("Jorge Test", "jorgetest@gmail.com", "Pass99", phoneDTOList));
+        userResponseDTO = createUserService.saveUser(new UserRequestDTO("Jorge Test", "jorgetest@gmail.com", "Pass99", phoneDTOList));
     }
 
     @Test
     void deleteUserOK() {
-        MessageResponseDTO messageResponseDTO = userService.deleteUserById(userResponseDTO.getId());
+        MessageResponseDTO messageResponseDTO = deleteUserService.deleteUserById(userResponseDTO.getId());
         Assertions.assertNotNull(messageResponseDTO);
         String expectedMessage = "doesn't exists.";
         Assertions.assertTrue(messageResponseDTO.getMessage().contains("was deleted."));
@@ -43,7 +46,7 @@ public class DeleteUserServiceTest {
     @Test
     void deleteUserNotFound() {
         NotFoundException exception = Assertions.assertThrows(NotFoundException.class, () -> {
-            userService.deleteUserById("wrong-id");
+            deleteUserService.deleteUserById("wrong-id");
         });
         String expectedMessage = "doesn't exists.";
         Assertions.assertTrue(exception.getMessage().contains(expectedMessage));

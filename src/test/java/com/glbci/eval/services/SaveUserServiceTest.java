@@ -22,7 +22,7 @@ import java.util.List;
 public class SaveUserServiceTest {
 
     @Autowired
-    private UserService userService;
+    private CreateUserService createUserService;
 
     private UserRequestDTO userRequestDTO;
 
@@ -35,7 +35,7 @@ public class SaveUserServiceTest {
 
     @Test
     void saveUserOK() {
-        UserResponseDTO userResponseDTO = userService.saveUser(userRequestDTO);
+        UserResponseDTO userResponseDTO = createUserService.saveUser(userRequestDTO);
         Assertions.assertNotNull(userResponseDTO);
     }
 
@@ -43,7 +43,7 @@ public class SaveUserServiceTest {
     void saveUserWrongEmailFormat() {
         userRequestDTO.setEmail("jorgetestgmail.com");
         BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
-            userService.saveUser(userRequestDTO);
+            createUserService.saveUser(userRequestDTO);
         });
         String expectedMessage = "is not a valid Email format";
         Assertions.assertTrue(exception.getMessage().contains(expectedMessage));
@@ -51,9 +51,9 @@ public class SaveUserServiceTest {
 
     @Test
     void saveUserEmailAlreadyInUse() {
-        UserResponseDTO userResponseDTO = userService.saveUser(userRequestDTO);
+        UserResponseDTO userResponseDTO = createUserService.saveUser(userRequestDTO);
         AlreadyExistsException exception = Assertions.assertThrows(AlreadyExistsException.class, () -> {
-            userService.saveUser(userRequestDTO);
+            createUserService.saveUser(userRequestDTO);
         });
         String expectedMessage = "is already in use";
         Assertions.assertTrue(exception.getMessage().contains(expectedMessage));
@@ -63,7 +63,7 @@ public class SaveUserServiceTest {
     void saveUserWrongPasswordFormat() {
         userRequestDTO.setPassword("pwd78");
         BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
-            userService.saveUser(userRequestDTO);
+            createUserService.saveUser(userRequestDTO);
         });
         String expectedMessage = "Password doesn't follow the correct format (One upercase letter, lowercase case letters and two digits.";
         Assertions.assertTrue(exception.getMessage().contains(expectedMessage));

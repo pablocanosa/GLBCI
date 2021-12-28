@@ -1,13 +1,12 @@
 package com.glbci.eval.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glbci.eval.exceptions.AlreadyExistsException;
 import com.glbci.eval.exceptions.BadRequestException;
 import com.glbci.eval.model.dto.PhoneDTO;
 import com.glbci.eval.model.dto.UserRequestDTO;
 import com.glbci.eval.model.dto.UserResponseDTO;
-import com.glbci.eval.services.UserService;
+import com.glbci.eval.services.CreateUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,14 +36,14 @@ public class SaveUserControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    UserService userService;
+    CreateUserService createUserService;
 
     @Test
     void saveUserOK_statusCode201() throws Exception {
         UserRequestDTO userRequestDTO = createUserRequestDTO();
         UserResponseDTO userResponseDTO = new UserResponseDTO("id1234", "token1234567890", true);
 
-        when(userService.saveUser(any())).thenReturn(userResponseDTO);
+        when(createUserService.saveUser(any())).thenReturn(userResponseDTO);
 
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/api/users")
@@ -59,14 +58,14 @@ public class SaveUserControllerTest {
                 .andExpect(jsonPath("$.isActive", is(true)))
                 .andReturn();
 
-        verify(userService, times(1)).saveUser(any());
+        verify(createUserService, times(1)).saveUser(any());
     }
 
     @Test
     void saveUserWrongEmailFormat_statusCode400() throws Exception {
         UserRequestDTO userRequestDTO = createUserRequestDTO();
 
-        when(userService.saveUser(any())).thenThrow(new BadRequestException("is not a valid Email format"));
+        when(createUserService.saveUser(any())).thenThrow(new BadRequestException("is not a valid Email format"));
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -78,14 +77,14 @@ public class SaveUserControllerTest {
                 .andExpect(jsonPath("$.message", containsString("is not a valid Email format")))
                 .andReturn();
 
-        verify(userService, times(1)).saveUser(any());
+        verify(createUserService, times(1)).saveUser(any());
     }
 
     @Test
     void saveUserEmailAlreadyInUse_statusCode409() throws Exception {
         UserRequestDTO userRequestDTO = createUserRequestDTO();
 
-        when(userService.saveUser(any())).thenThrow(new AlreadyExistsException("is already in use"));
+        when(createUserService.saveUser(any())).thenThrow(new AlreadyExistsException("is already in use"));
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -97,14 +96,14 @@ public class SaveUserControllerTest {
                 .andExpect(jsonPath("$.message", containsString("is already in use")))
                 .andReturn();
 
-        verify(userService, times(1)).saveUser(any());
+        verify(createUserService, times(1)).saveUser(any());
     }
 
     @Test
     void saveUserWrongPasswordFormat_statusCode400() throws Exception {
         UserRequestDTO userRequestDTO = createUserRequestDTO();
 
-        when(userService.saveUser(any())).thenThrow(new BadRequestException("Password doesn't follow the correct format"));
+        when(createUserService.saveUser(any())).thenThrow(new BadRequestException("Password doesn't follow the correct format"));
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -116,7 +115,7 @@ public class SaveUserControllerTest {
                 .andExpect(jsonPath("$.message", containsString("Password doesn't follow the correct format")))
                 .andReturn();
 
-        verify(userService, times(1)).saveUser(any());
+        verify(createUserService, times(1)).saveUser(any());
     }
 
     private UserRequestDTO createUserRequestDTO() {
